@@ -1,0 +1,18 @@
+{
+  "name": "record-collection",
+  "version": "1.0.0",
+  "description": "Beth's and My Record Collection",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Damion Armentrout",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.2",
+    "sqlite3": "^5.0.2"
+  }
+}
