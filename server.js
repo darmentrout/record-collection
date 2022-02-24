@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const db_name = 'record-collection.db';
 const db = new sqlite3.Database(db_name, err => {
   if (err) {
-    return console.error(err.message);
+    console.error(err.message);
+    return;
   }
   console.log('Successful connection to the database record-collection.db');
 });
@@ -15,8 +16,9 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.listen(3000, () => { 
-  console.log('Server started (http://localhost:3000/) !');
+const port = 3000;
+app.listen(port, () => { 
+  console.log(`Server started http://localhost:${port}/`);
 });
 
 app.get('/', (req, res) => { 
@@ -32,7 +34,7 @@ app.post('/add', (req, res) => {
       res.end(err.message);
       return;
     }
-    res.end(`row ${this.lastID} added`);
+    res.end(`record ID #${this.lastID} added`);
   });
 });
 
@@ -56,5 +58,30 @@ app.get('/artists', (req, res) => {
     }
     const artistArray = rows.map(x => x.artist);
     res.json(artistArray);
+  });
+});
+
+app.get('/random', (req, res) => {
+  const query = 'SELECT * FROM records ORDER BY RANDOM() LIMIT 1;';
+  db.all(query, [], function(err, rows){
+    if(err){
+      res.end(err.message);
+      return;
+    }
+    res.json(rows[0]);
+  });
+});
+
+// search by different properties (artist, year, title)
+
+app.get('/search/:needle', (req, res) => { 
+  // concatenate (||) the wildcards (%) with the placeholder (?)
+  const query = "SELECT * FROM records WHERE artist LIKE '%' || ? || '%' OR title LIKE '%' || ? || '%'";
+  db.all(query, [req.params.needle, req.params.needle], function(err, rows){
+    if(err){
+      res.end(err.message);
+      return;
+    }
+    res.json(rows);
   });
 });
