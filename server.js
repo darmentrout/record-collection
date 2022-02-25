@@ -21,8 +21,10 @@ app.listen(port, () => {
   console.log(`Server started http://localhost:${port}/`);
 });
 
+app.use(express.static(__dirname));
+
 app.get('/', (req, res) => { 
-  res.send ('Hello world...');
+  res.sendFile(__dirname + "/index.html"); 
 });
 
 app.post('/add', (req, res) => {
@@ -60,6 +62,27 @@ app.put('/update/:id', (req, res) => {
       return;
     }
     res.end(`record ID #${req.params.id} updated`);
+  });
+});
+
+app.get('/catalog', (req, res) => {
+  let query = 'SELECT * FROM records ORDER BY artist ';
+  let pagination = [];
+  if(req.query.limit && req.query.offset){
+    query += `LIMIT ? OFFSET ?`;
+    pagination.push(req.query.limit);
+    pagination.push(req.query.offset);
+  }
+  db.all(query, pagination, function(err, rows){
+    if(err){
+      res.end(err.message);
+      return;
+    }
+    if(rows.length <= 0){
+      res.json({ "results": "none"});
+      return;
+    }
+    res.json(rows);
   });
 });
 
