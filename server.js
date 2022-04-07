@@ -36,7 +36,7 @@ app.post('/add', (req, res) => {
       res.end(err.message);
       return;
     }
-    res.end(`record ID #${this.lastID} added`);
+    res.end(`Record ID #${this.lastID} Added`);
   });
 });
 
@@ -61,7 +61,7 @@ app.put('/update/:id', (req, res) => {
       res.end(err.message);
       return;
     }
-    res.end(`record ID #${req.params.id} updated`);
+    res.end(`Record ID #${req.params.id} Updated`);
   });
 });
 

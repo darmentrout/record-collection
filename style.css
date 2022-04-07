@@ -67,6 +67,12 @@ nav a {
     margin: .5em auto;
     padding: 1em;
 }
+#catalogResults table {
+    width: 100%;
+}
+#catalogResults th {
+    text-align: left;
+}
 .flex {
     display: flex;
     flex-direction: column;
@@ -82,3 +88,20 @@ nav a {
     flex-grow: 2;
     padding: 1rem;
 }
+#addRecord p {
+    margin: .15em;
+}
+#addRecord label {
+    margin: 1em 0;
+    display: block;
+}
+.active {
+    font-weight: bold;
+}
+#add > div {
+    display: flex;
+}
+#add > div > * {
+    width: 50%;
+}
+  

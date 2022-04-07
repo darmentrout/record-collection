@@ -18,25 +18,69 @@
                 <ul>
                     <li><a href="#catalog">Catalog</a></li>
                     <li><a href="#artists">Artists</a></li>
-                    <li><a href="#add">Add</a></li>
+                    <li><a href="#add" class="active">Add</a></li>
                     <li><a href="#search">Search</a></li>
                 </ul>
             </nav>
             <div id="content">
-                <div id="catalog" class="open">
+                <div id="catalog">
                     <h2>Catalog</h2>
                     <div id="catalogPagination">
                         <span id="catalogBack"><</span> <span id="catalogForward">></span>
                     </div>
                     <div id="catalogResults">
-
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Artist</th>
+                                    <th>Title</th>
+                                    <th>Year</th>
+                                    <th>Media</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalogTbody"></tbody>
+                        </table>
                     </div>
                 </div>
                 <div id="artists">
                     <h2>Artists</h2>
                 </div>
-                <div id="add">
+                <div id="add" class="open">
                     <h2>Add</h2>
+                    <div>
+                        <form id="addRecord">
+                            <!-- artist, title, year, media, notes -->
+                            <label>
+                                <p>Artist</p>
+                                <input id="artist" name="artist" type="text">
+                            </label>
+                            <label>
+                                <p>Title</p>
+                                <input id="title" name="title" type="text">
+                            </label>
+                            <label>
+                                <p>Year</p>
+                                <input id="year" name="year" type="number">
+                            </label>
+                            <label>
+                                <p>Media</p>
+                                <select id="media" name="media">
+                                    <option>vinyl 33</option>
+                                    <option>vinyl 45</option>
+                                    <option>cd</option>
+                                    <option>cd-r</option>
+                                    <option>cassette</option>
+                                </select>
+                            </label>
+                            <label>
+                                <p>Notes</p>
+                                <input id="notes" name="notes" type="text">
+                            </label>
+                            <input id="addRecordSubmit" type="submit" value="Add">
+                        </form>
+                        <div id="addResults"></div>
+                    </div>
                 </div>
                 <div id="search">
                     <h2>Search</h2>

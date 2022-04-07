@@ -1,17 +1,21 @@
 const navLinks = document.querySelectorAll('nav ul li a');
 navLinks.forEach( (v,k) => {
     v.addEventListener('click', e => {
+        e.preventDefault();
         document.querySelectorAll('.open').forEach( el => {
             el.classList.toggle('open');
         });
         const targetDiv = e.currentTarget.hash.replace('#', '');
         document.getElementById(targetDiv).classList.toggle('open');
+        const active = document.querySelector('.active');
+        active.classList.toggle('active');
+        v.classList.add('active');
     });
 });
 
 const getCatalog = document.getElementById('getCatalog');
-const catalogResults = document.getElementById('catalogResults');
-catalogResults.innerHTML = '';
+const catalogTbody = document.getElementById('catalogTbody');
+catalogTbody.innerHTML = '';
 fetch('/catalog')
 .then((response) => {
     if(!response.ok) {
@@ -22,14 +26,51 @@ fetch('/catalog')
 .then((json) => {
     json.forEach((v,k) => {
         const item = `
-            <p>${v.artist}</p>
-            <p>${v.title}</p>
-            <p>${v.year}</p>
-            <p>${v.media}</p>
-            <p>${v.notes}</p>
+            <td>${v.artist}</td>
+            <td>${v.title}</td>
+            <td>${v.year}</td>
+            <td>${v.media}</td>
+            <td>${v.notes}</td>
+        `;
+        const itemContainer = document.createElement('tr');
+        itemContainer.innerHTML = item;
+        catalogTbody.appendChild(itemContainer);
+    });
+});
+let what = {};
+const addRecord = document.getElementById('addRecord');
+addRecord.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = new FormData(addRecord);
+    const json = Object.fromEntries(data.entries());
+    what = json;
+    fetch('/add', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },        
+        body: JSON.stringify(json)
+    })
+    .then((response) => {
+        if(!response.ok) {
+            throw new Error(`Error: ${ response.status }`);
+        }        
+        return response.text();
+    })
+    .then((text) => {
+        const addResults = document.getElementById('addResults');
+        addResults.innerHTML = `<p><strong>${text}</strong></p>`;        
+        const item = `
+            <p>${json.artist}</p>
+            <p>${json.title}</p>
+            <p>${json.year}</p>
+            <p>${json.media}</p>
+            <p>${json.notes}</p>
         `;
         const itemContainer = document.createElement('div');
         itemContainer.innerHTML = item;
-        catalogResults.appendChild(itemContainer);
-    });
+        addResults.appendChild(itemContainer);    
+        addRecord.reset();
+    });    
 });
