@@ -37,13 +37,12 @@ fetch('/catalog')
         catalogTbody.appendChild(itemContainer);
     });
 });
-let what = {};
+
 const addRecord = document.getElementById('addRecord');
 addRecord.addEventListener('submit', e => {
     e.preventDefault();
     const data = new FormData(addRecord);
     const json = Object.fromEntries(data.entries());
-    what = json;
     fetch('/add', {
         method: 'POST',
         headers: {
@@ -73,4 +72,18 @@ addRecord.addEventListener('submit', e => {
         addResults.appendChild(itemContainer);    
         addRecord.reset();
     });    
+});
+
+fetch('/artist-list')
+.then((response) => {
+    if(!response.ok) {
+        throw new Error(`Error: ${ response.status }`);
+    }        
+    return response.json();
+})
+.then((json) => {
+    json.forEach((v) => {
+        const artist = `<li>${v}</li>`;
+        document.getElementById('artistList').innerHTML += artist;
+    });
 });
