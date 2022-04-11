@@ -8,8 +8,17 @@ const db = new sqlite3.Database(db_name, err => {
     console.error(err.message);
     return;
   }
-  console.log('Successful connection to the database record-collection.db');
+  console.log(`Successful connection to the database ${db_name}`);
 });
+
+db.run(`CREATE TABLE if not exists records (
+  id integer primary key autoincrement,
+  artist text,
+  title text,
+  year integer,
+  media text,
+  notes text
+)`);
 
 const app = express();
 
