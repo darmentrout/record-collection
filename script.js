@@ -13,10 +13,35 @@ navLinks.forEach( (v,k) => {
     });
 });
 
-const getCatalog = document.getElementById('getCatalog');
-const catalogTbody = document.getElementById('catalogTbody');
-catalogTbody.innerHTML = '';
-fetch('/catalog')
+const fetchCatalog = (catUrl = '/catalog?limit=10&offset=0') => {
+    const catalogTbody = document.getElementById('catalogTbody');
+    catalogTbody.innerHTML = '';
+    fetch(catUrl)
+    .then((response) => {
+        if(!response.ok) {
+            throw new Error(`Error: ${ response.status }`);
+        }        
+        return response.json();
+    })
+    .then((json) => {
+        json.forEach((v,k) => {
+            const item = `
+                <td>${v.artist}</td>
+                <td>${v.title}</td>
+                <td>${v.year}</td>
+                <td>${v.media}</td>
+                <td>${v.notes}</td>
+            `;
+            const itemContainer = document.createElement('tr');
+            itemContainer.innerHTML = item;
+            catalogTbody.appendChild(itemContainer);
+        });
+    });
+}
+fetchCatalog();
+
+let count = 0;
+fetch('/count')
 .then((response) => {
     if(!response.ok) {
         throw new Error(`Error: ${ response.status }`);
@@ -24,17 +49,25 @@ fetch('/catalog')
     return response.json();
 })
 .then((json) => {
-    json.forEach((v,k) => {
-        const item = `
-            <td>${v.artist}</td>
-            <td>${v.title}</td>
-            <td>${v.year}</td>
-            <td>${v.media}</td>
-            <td>${v.notes}</td>
-        `;
-        const itemContainer = document.createElement('tr');
-        itemContainer.innerHTML = item;
-        catalogTbody.appendChild(itemContainer);
+    count = json.count;
+    document.getElementById('catalogCount').innerHTML = count;
+});
+
+let offset = 0;
+const pageArrow = document.querySelectorAll('.page-arrow');
+pageArrow.forEach(v => {
+    v.addEventListener('click', e => {
+        const classList = [... e.target.classList];
+        if(classList.includes('back')){
+            offset = offset - 10 < 0 ? 0 : offset - 10;
+            fetchCatalog(`/catalog?limit=10&offset=${offset}`);
+        }
+        if(classList.includes('forward')){
+            const countMax = Math.round(count / 10);
+            console.log(countMax);
+            offset =  offset > countMax ? offset : offset + 10;
+            fetchCatalog(`/catalog?limit=10&offset=${offset}`);
+        }
     });
 });
 

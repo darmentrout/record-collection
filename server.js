@@ -75,10 +75,10 @@ app.put('/update/:id', (req, res) => {
 });
 
 app.get('/catalog', (req, res) => {
-  let query = 'SELECT * FROM records ORDER BY artist ';
+  let query = 'SELECT * FROM records ORDER BY artist ASC ';
   let pagination = [];
   if(req.query.limit && req.query.offset){
-    query += `LIMIT ? OFFSET ?`;
+    query += `LIMIT ? OFFSET ? `;
     pagination.push(req.query.limit);
     pagination.push(req.query.offset);
   }
@@ -188,5 +188,20 @@ app.get('/search/:needle', (req, res) => {
       return;
     }
     res.json(rows);
+  });
+});
+
+app.get('/count', (req, res) => {
+  const query = 'SELECT COUNT(*) as count FROM records';
+  db.all(query, [], function(err, rows){
+    if(err){
+      res.end(err.message);
+      return;
+    }
+    if(rows.length <= 0){
+      res.json({ "count": "none"});
+      return;
+    }
+    res.json(rows[0]);
   });
 });
