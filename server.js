@@ -166,10 +166,10 @@ app.get('/random', (req, res) => {
 
 app.get('/search/:needle', (req, res) => { 
   // concatenate (||) the wildcards (%) with the placeholder (?)
-  let query = "SELECT * FROM records WHERE \
-         artist LIKE '%' || $needle || '%' \
-       OR title LIKE '%' || $needle || '%' \
-       OR notes LIKE '%' || $needle || '%' ORDER BY ";
+  let query = `SELECT * FROM records WHERE 
+         artist LIKE '%' || $needle || '%' 
+       OR title LIKE '%' || $needle || '%' 
+       OR notes LIKE '%' || $needle || '%' ORDER BY `;
   const filters = ['artist', 'title', 'year', 'media', 'notes'];
   if(req.query.filter && filters.indexOf(req.query.filter) > -1){  
     query += `${req.query.filter} ASC`;

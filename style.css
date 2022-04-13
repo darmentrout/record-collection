@@ -10,7 +10,7 @@ body {
     background-color: white;
     color: black;
     font-size: 1.2rem;              
-    height: 100%;
+    height: 100vh;
     padding: 1px;
 }
 header {
@@ -30,7 +30,7 @@ h1 {
 footer {
     padding: 2em;
     font-size: .75em;
-    
+    text-align: center;
 }
 nav {
     border-top: 1px solid black;
@@ -62,6 +62,9 @@ nav a {
 #content .open {
     display: block;
 }
+#catalogResults {
+	min-height: 50vh;
+}
 #catalogResults > div {
     border: 1px solid lightgray;
     margin: .5em auto;
@@ -76,8 +79,6 @@ nav a {
 .flex {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 .container {
     width: 90vw;
