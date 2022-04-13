@@ -104,6 +104,11 @@ nav a {
 #add > div > * {
     width: 50%;
 }
+#addRecord input, 
+#addRecord select {
+	width: 100%;
+	max-width: 300px;
+}
 #catalogPagination {
 	margin-bottom: 1em;
     display: flex;

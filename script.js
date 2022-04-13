@@ -61,27 +61,54 @@ fetch('/count')
     while(pageCount <= countMax){
         let pageLinkOffset = pageCountDisplay == 1 ? 0 : pageCountDisplay * 10 - 10;
         if(pageCountDisplay == 1){
-            pages.innerHTML += `<a class="current-page" href="${pageLinkOffset}">${pageCountDisplay}</a>`;
+            pages.innerHTML += `<a class="current-page" href="#" data-offset="${pageLinkOffset}">${pageCountDisplay}</a>`;
         }
         else{
-            pages.innerHTML += `<a href="${pageLinkOffset}">${pageCountDisplay}</a>`;
+            pages.innerHTML += `<a href="#" data-offset="${pageLinkOffset}">${pageCountDisplay}</a>`;
         }
         pageCount += 10;
         pageCountDisplay++;
     }
+    const pageLinks = document.querySelectorAll('#pages a');
+    pageLinks.forEach( v => {
+        v.addEventListener('click', e => {
+            e.preventDefault();
+            document.querySelector('.current-page').classList.toggle('current-page');
+            e.target.classList.add('current-page');
+            offset = parseInt(v.dataset.offset); 
+            fetchCatalog(`/catalog?limit=10&offset=${offset}`);
+        });
+    });
 });
 
 const pageArrow = document.querySelectorAll('.page-arrow');
 pageArrow.forEach(v => {
     v.addEventListener('click', e => {
         const classList = [... e.target.classList];
+        const currentPage = document.querySelector('.current-page');
+        const firstPage = document.querySelector('#pages a:first-child');
+        const lastPage = document.querySelector('#pages a:last-child');
         if(classList.includes('back')){
             offset = offset - 10 < 0 ? 0 : offset - 10;
+            if(currentPage == firstPage){
+                return;
+            }
             fetchCatalog(`/catalog?limit=10&offset=${offset}`);
+            if(currentPage.previousElementSibling != null){
+                currentPage.classList.toggle('current-page');
+                currentPage.previousElementSibling.classList.add('current-page');
+            }
         }
         if(classList.includes('forward')){
-            offset =  offset >= countMax ? offset : offset + 10;
+            offset = offset >= countMax ? offset : offset + 10;
+            if(currentPage == lastPage){
+                return;
+            }
             fetchCatalog(`/catalog?limit=10&offset=${offset}`);
+            if(currentPage.nextElementSibling != null){
+                currentPage.classList.toggle('current-page');
+                currentPage.nextElementSibling.classList.add('current-page');
+            }
         }
     });
 });
