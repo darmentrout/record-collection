@@ -106,6 +106,20 @@ nav a {
 }
 #catalogPagination {
 	margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+}
+#pages {
+    margin: 0 1em;    
+}
+#pages a {
+	color: #ccc;
+	text-decoration: none;
+	padding: 0 .25em;
+}
+#pages a.current-page {
+    font-weight: bold;
+    color: #000;
 }
 .page-arrow {
 	border: 1px solid #666;
@@ -116,9 +130,10 @@ nav a {
 	justify-content: center;
 	align-items: center;
     cursor: pointer;
+    background: #fff;
 }
 .page-arrow:hover {
-    background: #ccc;
+    background: #ddd;
 }
 #artistList {
     -moz-column-count: 4;

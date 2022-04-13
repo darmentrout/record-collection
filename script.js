@@ -41,6 +41,8 @@ const fetchCatalog = (catUrl = '/catalog?limit=10&offset=0') => {
 fetchCatalog();
 
 let count = 0;
+let countMax = 0;
+let offset = 0;
 fetch('/count')
 .then((response) => {
     if(!response.ok) {
@@ -51,9 +53,24 @@ fetch('/count')
 .then((json) => {
     count = json.count;
     document.getElementById('catalogCount').innerHTML = count;
+    countMax = Math.floor(count / 10) * 10;
+    const pages = document.getElementById('pages');
+    const totalPages = countMax / 10;
+    let pageCount = 0;
+    let pageCountDisplay = 1;
+    while(pageCount <= countMax){
+        let pageLinkOffset = pageCountDisplay == 1 ? 0 : pageCountDisplay * 10 - 10;
+        if(pageCountDisplay == 1){
+            pages.innerHTML += `<a class="current-page" href="${pageLinkOffset}">${pageCountDisplay}</a>`;
+        }
+        else{
+            pages.innerHTML += `<a href="${pageLinkOffset}">${pageCountDisplay}</a>`;
+        }
+        pageCount += 10;
+        pageCountDisplay++;
+    }
 });
 
-let offset = 0;
 const pageArrow = document.querySelectorAll('.page-arrow');
 pageArrow.forEach(v => {
     v.addEventListener('click', e => {
@@ -63,9 +80,7 @@ pageArrow.forEach(v => {
             fetchCatalog(`/catalog?limit=10&offset=${offset}`);
         }
         if(classList.includes('forward')){
-            const countMax = Math.round(count / 10);
-            console.log(countMax);
-            offset =  offset > countMax ? offset : offset + 10;
+            offset =  offset >= countMax ? offset : offset + 10;
             fetchCatalog(`/catalog?limit=10&offset=${offset}`);
         }
     });
