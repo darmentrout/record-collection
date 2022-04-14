@@ -147,6 +147,7 @@ addRecord.addEventListener('submit', e => {
         </div>`;
         addResults.innerHTML += item; 
         addRecord.reset();
+        fetchCatalog();
     });    
 });
 
@@ -270,5 +271,33 @@ editRecord.addEventListener('submit', e => {
         </div>`;
         editResults.innerHTML += item; 
         editRecord.reset();
+        fetchCatalog();
     });    
 });
+
+// ----- FETCH RANDOM ---------------------------------------------------------
+const fetchRandom = () => {
+    const randomResults = document.getElementById('randomResults');
+    randomResults.innerHTML = '';
+    fetch('/random')
+    .then((response) => {
+        if(!response.ok) {
+            throw new Error(`Error: ${ response.status }`);
+        }        
+        return response.json();
+    })
+    .then((json) => {           
+        const id = String(json.id).padStart(3, '0');
+        const item = `
+            <p>ID: ${id}</p>
+            <p>Artist: ${json.artist}</p>
+            <p>Title: ${json.title}</p>
+            <p>Year: ${json.year}</p>
+            <p>Media: ${json.media}</p>
+            <p>Notes: ${json.notes}</p>
+        `;
+        randomResults.innerHTML = item;
+    });
+}
+document.getElementById('getRandom').addEventListener('click', fetchRandom);
+fetchRandom();
