@@ -92,21 +92,27 @@ nav a {
 #addRecord p {
     margin: .15em;
 }
-#addRecord label {
+#addRecord label,
+#editRecord label {
     margin: 1em 0;
     display: block;
 }
 .active {
     font-weight: bold;
 }
-#add > div {
+#add > div,
+#edit > div {
     display: flex;
 }
-#add > div > * {
+#add > div > *,
+#edit > div > * {
     width: 50%;
 }
 #addRecord input, 
-#addRecord select {
+#addRecord select,
+#editRecord input, 
+#editRecord select,
+#search input:not([type="submit"]) {
 	width: 100%;
 	max-width: 300px;
 }
@@ -156,4 +162,10 @@ nav a {
 #searchResults th {
     text-align: left;
 }
-  
+#getRecordError {
+    visibility: hidden;
+    font-weight: bold;
+}
+#getRecordError.visible {
+    visibility: visible;
+}

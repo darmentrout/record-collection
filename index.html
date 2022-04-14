@@ -18,8 +18,9 @@
                 <ul>
                     <li><a href="#catalog">Catalog</a></li>
                     <li><a href="#artists">Artists</a></li>
-                    <li><a href="#add" class="active">Add</a></li>
                     <li><a href="#search">Search</a></li>
+                    <li><a href="#add" class="active">Add</a></li>
+                    <li><a href="#edit">Edit</a></li>
                 </ul>
             </nav>
             <div id="content">
@@ -105,6 +106,49 @@
                         </thead>
                         <tbody id="searchTbody"></tbody>
                     </table>
+                </div>
+                <div id="edit">
+                    <h2>Edit</h2>
+                    <div>
+                        <div>
+                            <form id="getRecord">
+                                <input type="number" id="getRecordField" aria-label="get record field">
+                                <input type="submit" value="Get Record">
+                                <p id="getRecordError">Not Found</p>
+                            </form>
+                            <input id="editId" name="id" type="hidden">
+                            <form id="editRecord">
+                                <label>
+                                    <p>Artist</p>
+                                    <input id="editArtist" name="artist" type="text">
+                                </label>
+                                <label>
+                                    <p>Title</p>
+                                    <input id="editTitle" name="title" type="text">
+                                </label>
+                                <label>
+                                    <p>Year</p>
+                                    <input id="editYear" name="year" type="number">
+                                </label>
+                                <label>
+                                    <p>Media</p>
+                                    <select id="editMedia" name="media">
+                                        <option>vinyl 33</option>
+                                        <option>vinyl 45</option>
+                                        <option>cd</option>
+                                        <option>cd-r</option>
+                                        <option>cassette</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    <p>Notes</p>
+                                    <input id="editNotes" name="notes" type="text">
+                                </label>
+                                <input id="editRecordSubmit" type="submit" value="Edit">
+                            </form>
+                        </div>
+                        <div id="editResults"></div>
+                    </div>
                 </div>
             </div>
         </main>

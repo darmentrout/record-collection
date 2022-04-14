@@ -1,3 +1,4 @@
+// ----- SET UP NAVIGATION ----------------------------------------------------
 const navLinks = document.querySelectorAll('nav ul li a');
 navLinks.forEach( (v,k) => {
     v.addEventListener('click', e => {
@@ -13,6 +14,7 @@ navLinks.forEach( (v,k) => {
     });
 });
 
+// ----- FETCH CATALOG --------------------------------------------------------
 const fetchCatalog = (catUrl = '/catalog?limit=10&offset=0') => {
     const catalogTbody = document.getElementById('catalogTbody');
     catalogTbody.innerHTML = '';
@@ -113,6 +115,7 @@ pageArrow.forEach(v => {
     });
 });
 
+// ----- ADD RECORD -----------------------------------------------------------
 const addRecord = document.getElementById('addRecord');
 addRecord.addEventListener('submit', e => {
     e.preventDefault();
@@ -147,6 +150,7 @@ addRecord.addEventListener('submit', e => {
     });    
 });
 
+// ----- ARTIST LIST ----------------------------------------------------------
 fetch('/artist-list')
 .then((response) => {
     if(!response.ok) {
@@ -161,6 +165,7 @@ fetch('/artist-list')
     });
 });
 
+// ----- SEARCH ---------------------------------------------------------------
 const search = (needle) => {
     const searchTbody = document.getElementById('searchTbody'); 
     searchTbody.innerHTML = '';
@@ -172,6 +177,13 @@ const search = (needle) => {
         return response.json();
     })
     .then((json) => {
+        if(typeof json.results == 'string'){
+            const item = `<tr>
+                <td colspan="6">No Results for <i>${needle}</i></td>
+            </tr>`;
+            searchTbody.innerHTML += item;
+            return;
+        }
         json.forEach((v,k) => {
             const id = String(v.id).padStart(3, '0');
             const item = `<tr>
@@ -189,4 +201,74 @@ const search = (needle) => {
 document.querySelector('#search form').addEventListener('submit', e => {
     e.preventDefault();
     search(document.getElementById('searchField').value);
-})
+});
+
+// ----- EDIT RECORD ----------------------------------------------------------
+const getRecord = document.getElementById('getRecord');
+getRecord.addEventListener('submit', e => {
+    e.preventDefault();
+    const needle = document.getElementById('getRecordField').value;
+    fetch(`/id/${needle}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        if(!response.ok) {
+            throw new Error(`Error: ${ response.status }`);
+        }        
+        return response.json();
+    })
+    .then((json) => {
+        getRecord.reset();
+        document.getElementById('editId').value = json.id;
+        document.getElementById('editArtist').value = json.artist;
+        document.getElementById('editTitle').value = json.title;
+        document.getElementById('editYear').value = json.year;
+        document.getElementById('editNotes').value = json.notes;
+        const editMediaType = document.querySelectorAll('#editMedia option');
+        editMediaType.forEach(v => {
+            v.selected = false;
+            if(v.value == json.media){
+                v.setAttribute('selected', true);
+            }
+        })
+    });    
+});
+
+const editRecord = document.getElementById('editRecord');
+editRecord.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = new FormData(editRecord);
+    const json = Object.fromEntries(data.entries());
+    const id = document.getElementById('editId').value;
+    fetch(`/edit/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },        
+        body: JSON.stringify(json)
+    })
+    .then((response) => {
+        if(!response.ok) {
+            throw new Error(`Error: ${ response.status }`);
+        }        
+        return response.text();
+    })
+    .then((text) => {
+        const editResults = document.getElementById('editResults');
+        editResults.innerHTML = `<p><strong>${text}</strong></p>`;        
+        const item = `<div>
+            <p>${json.artist}</p>
+            <p>${json.title}</p>
+            <p>${json.year}</p>
+            <p>${json.media}</p>
+            <p>${json.notes}</p>
+        </div>`;
+        editResults.innerHTML += item; 
+        editRecord.reset();
+    });    
+});
