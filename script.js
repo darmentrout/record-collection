@@ -25,16 +25,14 @@ const fetchCatalog = (catUrl = '/catalog?limit=10&offset=0') => {
     })
     .then((json) => {
         json.forEach((v,k) => {
-            const item = `
+            const item = `<tr>
                 <td>${v.artist}</td>
                 <td>${v.title}</td>
                 <td>${v.year}</td>
                 <td>${v.media}</td>
                 <td>${v.notes}</td>
-            `;
-            const itemContainer = document.createElement('tr');
-            itemContainer.innerHTML = item;
-            catalogTbody.appendChild(itemContainer);
+            </tr>`;
+            catalogTbody.innerHTML += item;
         });
     });
 }
@@ -162,3 +160,31 @@ fetch('/artist-list')
         document.getElementById('artistList').innerHTML += artist;
     });
 });
+
+const search = (needle) => {
+    const searchTbody = document.getElementById('searchTbody'); 
+    searchTbody.innerHTML = '';
+    fetch(`/search/${needle}`)
+    .then((response) => {
+        if(!response.ok) {
+            throw new Error(`Error: ${ response.status }`);
+        }        
+        return response.json();
+    })
+    .then((json) => {
+        json.forEach((v,k) => {
+            const item = `<tr>
+                <td>${v.artist}</td>
+                <td>${v.title}</td>
+                <td>${v.year}</td>
+                <td>${v.media}</td>
+                <td>${v.notes}</td>
+            </tr>`;
+            searchTbody.innerHTML += item;
+        });
+    });
+}
+document.querySelector('#search form').addEventListener('submit', e => {
+    e.preventDefault();
+    search(document.getElementById('searchField').value);
+})

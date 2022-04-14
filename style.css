@@ -149,3 +149,11 @@ nav a {
     column-count: 4;
     column-gap: 20px;
 }
+#searchResults {
+    width: 100%;
+    margin-top: 2em;
+}
+#searchResults th {
+    text-align: left;
+}
+  
