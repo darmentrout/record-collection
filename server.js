@@ -61,7 +61,7 @@ app.delete('/delete/:id', (req, res) => {
   });
 });
 
-app.put('/update/:id', (req, res) => {
+app.put('/edit/:id', (req, res) => {
   // curl -X PUT -d "artist=the%20cure&title=wish&year=1994&media=cd&notes=" localhost:3000/update/1
   const query = `UPDATE records SET artist = ?, title = ?, year = ?, media = ?, notes = ? WHERE id = ${req.params.id}`;
   const values = Object.values(req.body);

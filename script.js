@@ -24,8 +24,10 @@ const fetchCatalog = (catUrl = '/catalog?limit=10&offset=0') => {
         return response.json();
     })
     .then((json) => {
-        json.forEach((v,k) => {
+        json.forEach((v,k) => {            
+            const id = String(v.id).padStart(3, '0');
             const item = `<tr>
+                <td>${id}</td>
                 <td>${v.artist}</td>
                 <td>${v.title}</td>
                 <td>${v.year}</td>
@@ -133,16 +135,14 @@ addRecord.addEventListener('submit', e => {
     .then((text) => {
         const addResults = document.getElementById('addResults');
         addResults.innerHTML = `<p><strong>${text}</strong></p>`;        
-        const item = `
+        const item = `<div>
             <p>${json.artist}</p>
             <p>${json.title}</p>
             <p>${json.year}</p>
             <p>${json.media}</p>
             <p>${json.notes}</p>
-        `;
-        const itemContainer = document.createElement('div');
-        itemContainer.innerHTML = item;
-        addResults.appendChild(itemContainer);    
+        </div>`;
+        addResults.innerHTML += item; 
         addRecord.reset();
     });    
 });
@@ -173,7 +173,9 @@ const search = (needle) => {
     })
     .then((json) => {
         json.forEach((v,k) => {
+            const id = String(v.id).padStart(3, '0');
             const item = `<tr>
+                <td>${id}</td>
                 <td>${v.artist}</td>
                 <td>${v.title}</td>
                 <td>${v.year}</td>
