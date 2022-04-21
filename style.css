@@ -144,7 +144,8 @@ nav a {
     cursor: pointer;
     background: #fff;
 }
-.page-arrow:hover {
+.page-arrow:hover,
+#downloadCsv:hover {
     background: #ddd;
 }
 #artistList {
@@ -174,4 +175,16 @@ nav a {
 }
 #randomResults {
     min-height: 300px;
+}
+#catalogFrontMatter {
+	display: flex;
+	justify-content: space-between;
+    margin-bottom: 1em;
+}
+#downloadCsv {
+    color: #000;
+    text-decoration: none;
+    border: 1px solid #666;
+    padding: 10px;
+    border-radius: 10px;
 }

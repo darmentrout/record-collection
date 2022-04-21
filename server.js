@@ -205,3 +205,32 @@ app.get('/count', (req, res) => {
     res.json(rows[0]);
   });
 });
+
+app.get('/csv', (req, res) => {
+  let query = 'SELECT * FROM records ORDER BY artist ASC ';
+  db.all(query, [], function(err, rows){
+    if(err){
+      res.end(err.message);
+      return;
+    }
+    if(rows.length <= 0){
+      res.json({ "results": "none"});
+      return;
+    }
+    let csvString = "";
+    const headings = Object.keys(rows[0]);
+    csvString += headings.join(',') + "\r\n";
+    rows.forEach( (v,k) => {
+        let row = Object.values(v);
+        row.forEach( (j,c) => {
+          row[c] = `"${j}"`;
+        });
+        csvString += row.join(',') + "\r\n";
+    });    
+    res.writeHead(200, {
+      'Content-Type': 'text/csv',
+      'Content-Disposition': 'attachment; filename=record-collection.csv'
+    });
+    res.end(csvString,"binary");
+  });
+});
